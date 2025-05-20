@@ -18,14 +18,14 @@ def config(app):
         """
         Closes the database session when each Flask application request completes.
         """
-        db.session.close
+        db.session.close()
 
     return app
 
 def reset():
     """Database reset"""
     print("Deleting database...")
-    db.drop_all
+    db.drop_all()
     print("Creating new database...")
     db.create_all()
     print("Done.")
