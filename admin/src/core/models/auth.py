@@ -10,10 +10,10 @@ Rol_type = Enum (
 )
 
 rol_permission = Table (
-    "roles_permissons",
+    "roles_permissions",
     db.Model.metadata,
     Column("rol_id", Integer, ForeignKey("roles.id"), primary_key=True),
-    Column("permisson_id", Integer, ForeignKey("permissons.id"), primary_key=True),
+    Column("permisson_id", Integer, ForeignKey("permissions.id"), primary_key=True),
 )
 
 class Rol(db.Model):
@@ -23,12 +23,12 @@ class Rol(db.Model):
     name = Column(Rol_type, nullable=False)
 
     users = relationship("User", back_populates="rol")
-    permissons = relationship("Permisson", secondary="roles_permissons", back_populates="roles")
+    permissions = relationship("Permission", secondary="roles_permissions", back_populates="roles")
 
-class Permisson(db.Model):
-    __tablename__ = "permissons"
+class Permission(db.Model):
+    __tablename__ = "permissions"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String, nullable=False)
 
-    roles = relationship("Rol", secondary="roles_permissons", back_populates="permissons")
+    roles = relationship("Rol", secondary="roles_permissions", back_populates="permissions")

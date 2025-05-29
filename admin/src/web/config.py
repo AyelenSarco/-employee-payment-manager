@@ -2,6 +2,8 @@ from os import getenv
 
 class Config(object):
     TESTING = False
+    SECRET_KEY= getenv('SECRET_KEY_SESSION')
+    SESSION_TYPE = "filesystem"
 
 class ProductionConfig(Config):
     """

@@ -1,6 +1,6 @@
 from flask import abort
 from src.core.database import db
-from src.core.models import User
+from src.core.models import User, Permission,Rol
 from werkzeug.security import check_password_hash, generate_password_hash
 import traceback
 
@@ -53,4 +53,51 @@ def list_users():
         users = User.query(User).all()
         return users
     except:
+        return abort(500)
+    
+
+def search_user_by_email(email):
+    try:
+        return User.query.filter_by(email=email).first()
+    except:
+        abort(500)
+
+def validate_password(id, password):
+    try:
+        user_db = User.query.get(id)
+        if user_db:
+            return check_password_hash(user_db.hashed_password, password)
+        return False
+    except:
+        return abort(500)
+
+
+def get_permissions(id):
+    try:
+        permissions = db.session.query(Permission.name).join(Rol.permissions).join(User) \
+                    .filter(User.rol_id == Rol.id, User.id == id).all
+        
+        return [ permission.name for permission in permissions]
+    except:
+        abort(500)
+    
+
+def update_user(id, new_data):
+    try:
+        user = User.query.get(id)
+        if (new_data.get('name')):
+            user.name = new_data['name']
+        if (new_data.get('rol_id')):
+            user.rol_id = new_data['rol_id']
+        if ( new_data.get('email')):
+            user.email = new_data['email']
+        if(new_data.get('sys_admin')):
+            user.sys_admin = new_data['sys_admin']
+        if(new_data.get('is_active')):
+            user.is_active = new_data['is_active']
+        
+        db.session.commit()
+        return user
+    except:
+        db.session.rollback()
         return abort(500)
