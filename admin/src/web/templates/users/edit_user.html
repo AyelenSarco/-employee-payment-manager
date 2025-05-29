@@ -1,0 +1,84 @@
+{% extends "layout.html" %}
+
+{% block title %}Edit user{% endblock %}
+
+{% block content %}
+<h1 class="text-center">Editar user: {{user.name}}</h1> 
+<form id="form_usuario" action="{{ url_for('users.update', user_id=user.id) }}" method="POST" class="mt-4">
+
+    <div class="row">
+
+        <div class="col-md-6">
+            
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" class="form-control" id="email" placeholder="Ingrese un email" 
+                        name="email" required value="{{user.email}}">
+            </div>
+
+            <div class="form-group">
+                <label for="rol">Rol:</label>
+                <select class="form-control" id="rol" name="rol" >
+                    <option disabled >
+                        Select rol
+                    </option>
+                    {% for rol in roles %}
+                        <option value="{{ rol.id }}" 
+                        {% if user.rol_id == rol.id | string %} selected {% endif %}>
+                        {{ rol.name }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group"  id="sys_admin_container"
+                {% if user.rol.id == 1 %} style="display:block" {% endif %}>
+                <div class="form-check" >
+                    <input class="form-check-input" type="checkbox" name="sys_admin" id="sys_admin" 
+                    {% if user.sys_admin == True %}  checked {% endif %}>
+                    <label class="form-check-label" for="sys_admin">Sys-Admin</label>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="name">Name:</label>
+                <input type="text" class="form-control" id="name" name="name" required maxlength="20" 
+                        value="{{user.name}}" >
+            </div>
+            
+            <div class="form-group">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="state" id="state" 
+                    {% if user.is_active == True %} checked {% endif %}>
+                    <label class="form-check-label" for="state">Active</label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+        <button type="submit" class="btn btn-primary" >Edit user</button>
+    </div>
+</form>
+
+<script>
+    document.getElementById('rol').addEventListener('change', function() {
+        var rol = this.value;
+        var sysAdminContainer = document.getElementById('sys_admin_container');
+        var sysAdminCheckbox = document.getElementById('sys_admin');
+
+        if (rol === '1') {
+            sysAdminContainer.style.display = 'block';
+            sysAdminCheckbox.checked = false; 
+        } else {
+            sysAdminContainer.style.display = 'none';
+            sysAdminCheckbox.checked = false; 
+        }
+    });
+</script>
+
+
+{% endblock %}

@@ -1,0 +1,106 @@
+{% extends "layout.html" %}
+
+{% block title%} Users list{% endblock%}
+
+
+{% block content%} 
+
+<h1 class="text-center">Users</h1>
+<div class="d-grid gap-2 d-md-flex justify-content-md-end">
+    <a href="{{ url_for('users.create') }}" class="btn btn-primary">
+        Create User
+    </a>
+</div>
+
+<!-- Search form -->
+<div class="card mb-4">
+    
+    <div class="card-header">
+        <h6 class="mb-0">Filter</h6>
+    </div>
+    <div class="card-body ">
+        <form method="GET" action="{{ url_for('users.index') }}" class="form-inline justify-content-center">
+            <div class="input-group input-group-sm mb-3">
+                <label for="email" class="mr-2">Email:</label>
+                <input type="text" name="email" placeholder="Email" class="form-control mr-2" value="{{ request.args.get('email', '') }}">
+            </div>
+            <div class="input-group input-group-sm mb-3">
+                <label for="rol_id" class="mr-2">Rol:</label>
+                <select name="rol_id" class="form-control mr-2">
+                    <option value="" {% if request.args.get('rol_id') == '' %}selected{% endif %}>All</option>
+                    <option value="1" {% if request.args.get('rol_id') == '1' %}selected{% endif %}>Administrator</option>
+                    <option value="2" {% if request.args.get('rol_id') == '2' %}selected{% endif %}>Viewer</option>
+                </select>
+            </div>
+            
+            <button type="submit" class="btn btn-primary mb-3">Search</button>
+            <button type="button" class="btn btn-secondary mb-3 ml-2" onclick="resetFilters()">Clean filters</button>
+        </form>
+    </div>
+</div>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            
+            <th>Name
+                <a href="{{ url_for('users.index', sort_by='name', sort_order='asc', email=request.args.get('email'), rol_id=request.args.get('rol_id'), pag=1)}}">
+                    <i class="fas fa-arrow-up text-secondary"></i>
+                </a>
+                <a href="{{ url_for('users.index', sort_by='name', sort_order='desc', email=request.args.get('email'), rol_id=request.args.get('rol_id'), pag=1) }}">
+                    <i class="fas fa-arrow-down text-secondary"></i>
+                </a>
+
+            </th>
+            <th>Email
+                <a href="{{ url_for('users.index', sort_by='email', sort_order='asc', email=request.args.get('email'), rol_id=request.args.get('rol_id'), pag=1)}}">
+                    <i class="fas fa-arrow-up text-secondary"></i>
+                </a>
+                <a href="{{ url_for('users.index', sort_by='email', sort_order='desc', email=request.args.get('email'), rol_id=request.args.get('rol_id'), pag=1) }}">
+                    <i class="fas fa-arrow-down text-secondary"></i>
+                </a>
+            </th>
+            <th>Rol</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for user in users %}
+        <tr>
+            <td>{{ user.name }}</td>
+            <td>{{ user.email }}</td>
+            <td>{{ user.rol.name}}</td>
+            <td>
+                <a href="{{ url_for('users.view_user', user_id=user.id) }}" class="btn btn-success btn-sm">More nfo</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<div class="d-flex justify-content-between">
+    <div>
+        {% if users.has_prev %}
+            <a href="{{ url_for('users.index', pag=users.prev_num, email=request.args.get('email'), rol_id=request.args.get('rol_id'), sort_by=request.args.get('sort_by', 'email'), sort_order=request.args.get('sort_order', 'asc')) }}" class="btn btn-secondary">Previous</a>
+        {% endif %}
+    </div>
+    <div>Page {{ users.page }} of {{ users.pages }} (Total users: {{ users.total }})</div>
+    <div>
+        {% if users.has_next %}
+            <a href="{{ url_for('users.index', pag=users.next_num, email=request.args.get('email'), rol_id=request.args.get('rol_id'),  sort_by=request.args.get('sort_by', 'email'), sort_order=request.args.get('sort_order', 'asc')) }}" class="btn btn-secondary">Next</a>
+        {% endif %}
+    </div>
+    
+</div>
+
+<script>
+    function resetFilters() {
+        // Restablece los valores del formulario
+        document.querySelector('input[name="email"]').value = '';
+        document.querySelector('select[name="rol_id"]').value = '';
+        // Envia el formulario automáticamente después de restablecer los filtros
+        document.querySelector('form').submit();
+    }
+</script>
+
+
+
+{% endblock%}
