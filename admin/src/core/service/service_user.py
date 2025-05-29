@@ -48,9 +48,25 @@ def delete_user(id):
         db.session.rollback()
         return abort(500)
     
-def list_users():
+def list_users(email = None, rol_id = None, sort_by = 'name', sort_order = 'asc', pag = 1):
     try:
-        users = User.query(User).all()
+        users = User.query.filter_by()
+
+        if email and email != '':
+            users = users.filter(User.email.ilike(f'%{email}'))
+
+        if rol_id and rol_id != '':
+            users = users.filter_by(rol_id=rol_id)
+        
+        if sort_by == 'name':
+            users = users.order_by(User.name.asc() if sort_order == 'asc' else User.name.desc())
+        elif sort_by =="email":
+            users = users.order_by(User.email.asc()if sort_order == 'asc' else User.email.desc())
+        else: 
+            users = users.order_by(User.creation_date.asc() if sort_order ==  'asc' else User.creation_date.desc())
+
+        users = users.paginate(page = pag, per_page=2)
+
         return users
     except:
         return abort(500)

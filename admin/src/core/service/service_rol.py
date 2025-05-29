@@ -12,3 +12,17 @@ def create_rol(**kwargs):
         db.session.rollback()
         return abort(500)
 
+
+def list_roles():
+    try:
+        return Rol.query.all()
+    except:
+        return abort(500)
+    
+
+def get_rol_name(id):
+    try:
+        rol = Rol.query.get(id)
+        return rol.name
+    except:
+        return abort(500)

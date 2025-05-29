@@ -22,8 +22,20 @@ def create_app(env="development", static_folder="../../static"):
     @app.route("/")
     @login_required
     def home():
-        return "hola mundo!"
+        return render_template("home.html")
     
+    #blueprints 
+    app.register_blueprint(users_bp)
+    app.register_blueprint(auth_bp)
+
+
+    #register error handlers
+    register_error_handlers(app)
+
+    # registrer functions for jinja
+    app.jinja_env.globals.update(is_authenticated=is_authenticated)
+    app.jinja_env.globals.update(have_permission=have_permission)
+
 
     @app.cli.command(name="reset-db")
     def reset_db():
