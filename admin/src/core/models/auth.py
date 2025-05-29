@@ -2,10 +2,11 @@ from sqlalchemy import Table, Column, Integer, String, ForeignKey, Enum
 from sqlalchemy.orm import relationship
 from src.core.database import db
 
-Rol = Enum (
+Rol_type = Enum (
     'Administrator',
     'Viewer',
-    name = "user_rol_enum"
+    name = "user_rol_enum",
+    metadata = db.metadata
 )
 
 rol_permission = Table (
@@ -19,15 +20,15 @@ class Rol(db.Model):
     __tablename__ = "roles"
 
     id = Column (Integer, primary_key=True, autoincrement=True)
-    nombre = Column(Rol, nullable=False)
+    name = Column(Rol_type, nullable=False)
 
     users = relationship("User", back_populates="rol")
-    permissons = relationship("Permisson", secondary="role_permisson", back_populates="roles")
+    permissons = relationship("Permisson", secondary="roles_permissons", back_populates="roles")
 
 class Permisson(db.Model):
     __tablename__ = "permissons"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    nombre = Column(String, nullable=False)
+    name = Column(String, nullable=False)
 
-    roles = relationship("Rol", secondary="rol_permisson", back_populates="permissons")
+    roles = relationship("Rol", secondary="roles_permissons", back_populates="permissons")
