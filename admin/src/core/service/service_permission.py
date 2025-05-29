@@ -1,23 +1,23 @@
 from src.core.database import db
-from src.core.models import Permisson
+from src.core.models import Permission
 from flask import abort
 
-def create_permisson(**kwargs):
+def create_permission(**kwargs):
     try:
-        permisson = Permisson(**kwargs)
-        db.session.add(permisson)
+        permission = Permission(**kwargs)
+        db.session.add(permission)
         db.session.commit()
-        return permisson   
+        return permission   
     except:
         db.session.rollback()
         return abort(500)
     
 
-def delete_permisson(id):
+def delete_permission(id):
     try:
-        permisson_db = Permisson.query.get(id)
-        if permisson_db:
-            db.session.delete(permisson_db)
+        permission_db = Permission.query.get(id)
+        if permission_db:
+            db.session.delete(permission_db)
             db.session.commit()
             return True
         return None
