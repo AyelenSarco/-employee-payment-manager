@@ -24,8 +24,8 @@
                     </option>
                     {% for rol in roles %}
                         <option value="{{ rol.id }}" 
-                        {% if user.rol_id == rol.id | string %} selected {% endif %}>
-                        {{ rol.name }}
+                            {% if user.rol_id == rol.id %} selected {% endif %}>
+                            {{ rol.name }}
                         </option>
                     {% endfor %}
                 </select>
@@ -65,7 +65,7 @@
 </form>
 
 <script>
-    document.getElementById('rol').addEventListener('change', function() {
+    function  updateSysAdminVisibility() {
         var rol = this.value;
         var sysAdminContainer = document.getElementById('sys_admin_container');
         var sysAdminCheckbox = document.getElementById('sys_admin');
@@ -77,7 +77,12 @@
             sysAdminContainer.style.display = 'none';
             sysAdminCheckbox.checked = false; 
         }
-    });
+    }
+
+    // run on page load
+    document.addEventListener('DOMContentLoaded', updateSysAdminVisibility);
+    // run on select change
+    document.getElementById('rol').addEventListener('change', updateSysAdminVisibility);
 </script>
 
 
