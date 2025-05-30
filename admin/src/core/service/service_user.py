@@ -53,7 +53,7 @@ def list_users(email = None, rol_id = None, sort_by = 'name', sort_order = 'asc'
         users = User.query.filter_by()
 
         if email and email != '':
-            users = users.filter(User.email.ilike(f'%{email}'))
+            users = users.filter(User.email.icontains(f'%{email}'))
 
         if rol_id and rol_id != '':
             users = users.filter_by(rol_id=rol_id)
@@ -101,6 +101,7 @@ def get_permissions(id):
 def update_user(id, new_data):
     try:
         user = User.query.get(id)
+        
         if (new_data.get('name')):
             user.name = new_data['name']
         if (new_data.get('rol_id')):
