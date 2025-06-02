@@ -2,6 +2,8 @@ from flask import Blueprint, render_template, url_for, redirect,request, abort, 
 from src.core.service.service_user import create_user,get_user, list_users, delete_user, update_user
 from src.core.service.service_rol import list_roles, get_rol_name
 from src.web.handlers.auth import login_required,check
+from src.core.schemas.user import UserCreate, UserUpdate
+from pydantic import ValidationError
 from datetime import datetime
 import traceback
 
@@ -40,7 +42,7 @@ def create():
             is_sys_admin = 'sys_admin' in data
             is_active = 'state' in data
 
-            new_user = {
+            new_data = {
                 "name": data['name'],
                 "email": data['email'].strip(),
                 "hashed_password": data['password'],
@@ -50,19 +52,23 @@ def create():
                 "rol_id": data['rol'],
             }
 
-            # TO DO : Validate data
-            valid_data = True
-            if valid_data:
-                create_user(**new_user)
-                flash('User created successfully','sucess')
-                return redirect(url_for('users.index'))
-            
-            
-            return render_template('users/create_user.html', roles=roles, today=today, new_user=new_user)
+            new_user = UserCreate(**new_data)
 
+            create_user(**new_user.model_dump())
+            
+            flash('User created successfully','sucess')
+            return redirect(url_for('users.index'))
+            
+            
 
         return render_template('users/create_user.html', roles = roles, today=today)
+    except ValidationError as e:
+
+        for err in e.errors():
+            
+            flash(f"{err['loc'][0]}: {err['msg']}",'error')
         
+        return render_template('users/create_user.html', roles=roles, today=today, new_user=new_data)
     except:
         traceback.print_exc()
         return abort(400)
@@ -126,25 +132,33 @@ def update(user_id):
         new_data = {
             "name": data['name'],
             "rol_id": data['rol'],
-            "email": data['email'],
             "sys_admin": is_sys_admin,
             "is_active": is_active,
         }
         print(f"New data: {new_data}")
 
-        #TO DO: validation data if
-        valid_data = True
-        if valid_data:
-            updated_user = update_user(user_id, new_data)
-            if updated_user: 
-                flash('Used successfully updated','succes')
-            else:
-                flash('User not found','error')
+        
+
+        valid_user_data = UserUpdate(**new_data)
+        updated_user = update_user(user_id, valid_user_data.model_dump())
+        if updated_user: 
+            flash('Used successfully updated','succes')
             return redirect(url_for('users.index'))
+        else:
+            flash('User not found','error')
+        
         
         roles = list_roles()
         user = get_user(user_id)
         return render_template('users/edit_user.html', user=user, roles=roles, new_data=new_data)
+    except ValidationError as e:
+
+        for err in e.errors():
+            
+            flash(f"{err['loc'][0]}: {err['msg']}",'error')
+        
+        return render_template('users/edit_user.html', user=user, roles=roles, new_data=new_data)
+    
     except:
         traceback.print_exc()
         return abort(400)

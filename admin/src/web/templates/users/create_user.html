@@ -13,14 +13,14 @@
             
             <div class="form-group">
                 <label for="email">Email:</label>
-                <input type="email" class="form-control" id="email" placeholder="Ingrese un email" name="email" required 
+                <input type="email" class="form-control" id="email" placeholder="Ingrese un email" name="email"  
                 {% if new_user and new_user.get('email') %} value="{{new_user.email}}" {% endif %}>
             </div>
 
             <div class="form-group">
                 <label for="rol">Rol:</label>
-                <select class="form-control" id="rol" name="rol" >
-                    <option disabled {% if not new_user or not 'rol_id' in new_user %} selected{% endif%}>
+                <select class="form-control" id="rol" name="rol" required>
+                    <option value="" disabled {% if not new_user or not 'rol_id' in new_user %} selected{% endif%}>
                         Select rol
                     </option>
                     {% for rol in roles %}
@@ -45,7 +45,7 @@
         <div class="col-md-6">
             <div class="form-group">
                 <label for="name">Name:</label>
-                <input type="text" class="form-control" id="name" name="name" required maxlength="20" 
+                <input type="text" class="form-control" id="name" name="name" required minlength="2"     maxlength="500" 
                 {% if new_user and new_user.get('name') %} value="{{new_user.name}}" {% endif %}>
             </div>
             <div class="form-group">

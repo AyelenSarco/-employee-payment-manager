@@ -106,9 +106,7 @@ def update_user(id, new_data):
             user.name = new_data['name']
         if (new_data.get('rol_id')):
             user.rol_id = new_data['rol_id']
-        if ( new_data.get('email')):
-            user.email = new_data['email']
-        if(new_data.get('sys_admin')):
+        if(new_data.get('sys_admin') ):
             user.sys_admin = new_data['sys_admin']
         if(new_data.get('is_active')):
             user.is_active = new_data['is_active']
