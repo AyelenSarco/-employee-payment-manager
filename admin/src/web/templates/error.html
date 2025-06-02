@@ -1,0 +1,19 @@
+
+{% extends "layout.html" %}
+{% block title%}ERROR{% endblock %}
+{% block content %}
+<div class="container mt-5">
+    <div class="text-center">
+        <div class="error-code display-1">{{ error.code }}</div>
+        <div class="error-message h4">{{ error.message }}</div>
+        <div class="error-details mb-4">{{ error.description }}</div>
+        <div class="link-container">
+            {% if error.code == 403 or error.code == 404 %}
+                <a href="{{ url_for('home') }}" class="btn btn-primary">Volver a la página de inicio</a>
+            {% elif error.code == 401 %}
+                <a href="{{ url_for('auth.login') }}" class="btn btn-secondary">Iniciar sesión</a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock%}

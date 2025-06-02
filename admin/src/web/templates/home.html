@@ -1,0 +1,49 @@
+
+{% extends "layout.html" %}
+{% block title%}HOME{% endblock %}
+{% block content %}
+<div class="container mt-5">
+    <div class="text-center">
+       <p> HOLA {{session['name']}} !</p>
+    </div>
+    <div class="row align-items-end">
+        <div class="col">
+            <div class="card" style="width: 20rem;">
+                <img src="{{ url_for('static', filename='user-image') }}" class="card-img-top" alt="">
+                <div class="card-body">
+                    <h5 class="card-title">Users</h5>
+                    <p class="card-text">Manage or consult registered users on the platform</p>
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <a href="/users" class="btn btn-primary">Go</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card" style="width: 20rem;">
+                <img src="{{ url_for('static', filename='employees') }}" class="card-img-top" alt="">
+                <div class="card-body">
+                    <h5 class="card-title">Employes</h5>
+                    <p class="card-text">Manage or consult registered employee on the platform</p>
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <a href="/employees" class="btn btn-primary">Go</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card" style="width: 20rem;">
+                <img src="{{ url_for('static', filename='payments') }}" class="card-img-top" alt="">
+                <div class="card-body">
+                    <h5 class="card-title">Payments</h5>
+                    <p class="card-text">Manage or consult registered payments on the platform</p>
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <a href="/payments" class="btn btn-primary">Go</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+</div>
+{% endblock%}
