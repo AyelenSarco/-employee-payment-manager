@@ -5,6 +5,7 @@ from src.core import database
 from src.core import seeds
 from src.web.controllers.users import bp as users_bp
 from src.web.controllers.auth import auth_bp
+from src.web.controllers.employee import bp as employees_bp
 from src.web.handlers.error import register_error_handlers
 from src.web.handlers.auth import have_permission,is_authenticated, login_required
 
@@ -27,6 +28,7 @@ def create_app(env="development", static_folder="../../static"):
     #blueprints 
     app.register_blueprint(users_bp)
     app.register_blueprint(auth_bp)
+    app.register_blueprint(employees_bp)
 
 
     #register error handlers
