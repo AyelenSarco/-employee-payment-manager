@@ -28,12 +28,12 @@
                 {% endif %}
                 {% if have_permission(session,'employee_list') %}
                 <li class="nav-item">
-                    <a class="nav-link" href="">Employee</a>
+                    <a class="nav-link" href="{{ url_for('employees.index') }}">Employees</a>
                 </li>
                 {% endif %}
                 {% if have_permission(session,'payment_list') %}
                 <li class="nav-item">
-                    <a class="nav-link" href="">Payment</a>
+                    <a class="nav-link" href="">Payments</a>
                 </li>
                 {% endif %}
                 
