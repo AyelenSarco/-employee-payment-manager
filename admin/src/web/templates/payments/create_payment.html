@@ -1,0 +1,90 @@
+{% extends "layout.html" %}
+
+{% block title %}Create Payment{% endblock %}
+
+{% block content %}
+<h1 class="text-center">Create a Payment</h1> 
+
+<form id="payment_form" action="{{ url_for('payments.create') }}" method="POST" class="mt-4">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="payment_type">Select type of payment</label>
+                    <select id="payment_type" name="payment_type" class="form-control" required>
+                        <option disabled {% if not payment or not 'payment_type' in payment %}selected{% endif %}>
+                            Select type
+                        </option>
+                        <option value="Salary" {% if payment and payment['payment_type'] == "Salary"%}selected{% endif %}>
+                            Salary
+                        </option>
+                        <option value="Bonus" {% if payment and payment['payment_type'] == "Bonus"%}selected{% endif %}>
+                            Bonus
+                        </option>
+                        <option value="Expense" {% if payment and payment['payment_type'] == "Expense"%}selected{% endif %}>
+                            Expense
+                        </option>
+                    </select>
+            </div>
+
+            <div id="employee_container" 
+            {%if not payment or payment.get('payment_type') == "Expense" %}style="display: none;"
+            {% else%} style="display: block;"
+            {% endif %}>
+                <label for="employee_id">Select Employee</label>
+                <select class="form-control" id="employee_id" name="employee_id">
+                    <option value="" disabled {% if not payment or payment['employee_id'] == None %}selected{% endif %}>
+                        Selecct an option
+                    </option>
+                    {% for employee in employees %}
+                        <option value="{{ employee.id }}" {% if payment and payment['employee_id'] == employee.id %}selected{% endif %}>
+                            {{ employee.name }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            
+            <div class="form-group">
+                <label for="amount">Amount:</label>
+                <input type="number" step="0.01" class="form-control" id="amount" name="amount" 
+                value="{{ payment['amount'] if payment and 'amount' in payment else ''}}" 
+                required>
+            </div>
+            
+        </div>
+
+        <div class="col-md-6">
+            
+            <div class="form-group">
+                <label for="date">Date:</label>
+                <input type="date" class="form-control" id="date" name="date" 
+                value="{{ payment['date'] if payment and 'date' in payment else ''}}" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="description" class="form-label">Description</label>
+                <textarea class="form-control" id="description"  name="description">{{ payment['description'].strip() if payment and payment.get('description') else '' }}</textarea>
+            </div>
+            
+        </div>
+    </div>
+    
+    <button type="submit" class="btn btn-primary">Create payment</button>
+</form>
+
+
+<script>
+    document.getElementById('payment_type').addEventListener('change', function() {
+        var paymentType = this.value;
+        var employeeContainer = document.getElementById('employee_container');
+
+        if (paymentType === 'Expense') {
+            employeeContainer.style.display = 'none';
+        } else {
+            employeeContainer.style.display = 'block'; 
+        }
+    });
+</script>
+
+
+{% endblock %}
