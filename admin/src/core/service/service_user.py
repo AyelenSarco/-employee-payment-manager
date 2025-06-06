@@ -91,9 +91,10 @@ def validate_password(id, password):
 def get_permissions(id):
     try:
         permissions = db.session.query(Permission.name).join(Rol.permissions).join(User) \
-                    .filter(User.rol_id == Rol.id, User.id == id).all
+                    .filter(User.rol_id == Rol.id, User.id == id).all()
         
-        return [ permission.name for permission in permissions]
+        permissions_names = [ permission.name for permission in permissions]
+        return permissions_names
     except:
         abort(500)
     

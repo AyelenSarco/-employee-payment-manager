@@ -20,6 +20,12 @@ def get_employee(id):
     except:
         abort(500)
 
+def get_employees():
+    try:
+        return Employee.query.all()
+    except:
+        return abort(500)
+
 def update_employee(id, new_data):
     try:
         employee = Employee.query.get(id)
